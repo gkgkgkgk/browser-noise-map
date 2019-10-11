@@ -11,9 +11,19 @@ let zoom = 16;
 var mask = ctx.createImageData(width, height);
 
 function squareMask(size, x, y) {
-    if (x < (width / 2) - (size / 2) || x > (width / 2) + (size / 2) || (y < (height / 2) - (size / 2) || y > (height / 2) + (size / 2))) {
+    if (x < (50) || x > width - 50) {
         return 0.0;
     }
+    else if ((x >= 50 && x < (width / 2) - (size / 2))) {
+        return (x - 50) * (1.0 / ((width / 2) - (size / 2) - 50.0))
+    }
+    else if ((x <= width - 50 && x > (width / 2) + (size / 2))) {
+        return (x - (width - 50)) * (-1.0 / ((width / 2) - (size / 2) - (50.0)))
+    }
+
+    // elsif (x < (width / 2) - (size / 2) || x > (width / 2) + (size / 2) || (y < (height / 2) - (size / 2) || y > (height / 2) + (size / 2))) {
+    //     return 0.0;
+    // }
     else {
         return 1.0;
     }
@@ -21,7 +31,6 @@ function squareMask(size, x, y) {
 
 
 function refreshImage() {
-
     for (let i = 0; i < width; i++) {
         for (let j = 0; j < height; j++) {
             var pixelindex = (width * j + i) * 4;
@@ -34,10 +43,10 @@ function refreshImage() {
             let g = 0.0;
             let b = 0.0;
 
-            if (noise == 0) {
+            if (noise < 0.1) {
                 b = 255;
             }
-            else if (noise > 0 && noise <= 0.3) {
+            else if (noise >= 0.1 && noise <= 0.3) {
                 r = 81;
                 g = 255;
                 b = 87;
