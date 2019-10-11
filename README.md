@@ -4,4 +4,6 @@
 
 ![screencap1](/images/wip1.PNG "Map with Zoom and Weight Sliders")
 
+###### Map with Zoom and Fractal Sliders
+
 The zoom of the noise on the map can be adjusted, as well as the amount of fractal noise iterations (weight amount) to use and the strength of the fractal noise (wieght multiplier).
