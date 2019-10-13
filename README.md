@@ -1,4 +1,4 @@
-# browser-noise-map
+# Noise Based Map Generator
 
 ### Work in Progress #1 (10/11/19)
 
