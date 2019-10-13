@@ -13,7 +13,7 @@ let weightMultiplier = 0.5;
 let zoom = 120;
 
 let generateRivers = true;
-let riverAmt = 5;
+let riverAmt = 15;
 let maxRiverLength = 50;
 
 let mapContent = [];
@@ -137,12 +137,17 @@ const riverGenerator = () => {
             const pixelindex = (width * point.y + point.x) * 4;
 
             mask.data[pixelindex] = 0;
-            mask.data[pixelindex + 1] = 100.0;
-            mask.data[pixelindex + 2] = 200.0;
+            mask.data[pixelindex + 1] = 128.0;
+            mask.data[pixelindex + 2] = 175.0;
             mask.data[pixelindex + 3] = 255.0;
 
             let surroundingPoints = mapContent.filter(p => Math.abs(point.x - p.x) < 2 && Math.abs(point.y - p.y) < 2);
             point = surroundingPoints.reduce((min, p) => min.noise < p.noise ? min:p);
+            if(!point){point = surroundingPoints[0];}
+
+            if(point.type == "shallow water"){
+                break;
+            }
         }
     }
 }
