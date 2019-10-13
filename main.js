@@ -13,6 +13,7 @@ let zoom = 120;
 
 let generateRivers = true;
 let riverAmt = 5;
+let maxRiverLength = 50;
 
 let mapContent = [];
 
@@ -109,7 +110,7 @@ const refreshImage = () => {
 
             let color = getColor(noise);
             
-            mapContent[width * j + i] = {x: i, y: j, r: color.r, g: color.g, b: color.b, type: color.type};
+            mapContent[width * j + i] = {x: i, y: j, r: color.r, g: color.g, b: color.b, type: color.type, noise};
 
             mask.data[pixelindex] = color.r;
             mask.data[pixelindex + 1] = color.g;
@@ -127,7 +128,21 @@ const riverGenerator = () => {
     console.log("Generating Rivers");
     let startPoints = mapContent.filter(p => p.type == "dark mountain");
     for(let r = 0; r < riverAmt; r++){
+        let point = startPoints[Math.floor(Math.random()*startPoints.length)];
         
+        let direction = {x: 1, y: 1};
+
+        for(let i = 0; i < maxRiverLength; i++){
+            const pixelindex = (width * point.y + point.x) * 4;
+
+            mask.data[pixelindex] = 0;
+            mask.data[pixelindex + 1] = 100.0;
+            mask.data[pixelindex + 2] = 200.0;
+            mask.data[pixelindex + 3] = 255.0;
+
+            let surroundingPoints = mapContent.filter(p => Math.abs(point.x - p.x) < 2 && Math.abs(point.y - p.y) < 2);
+            point = surroundingPoints.reduce((min, p) => min.noise < p.noise ? min:p);
+        }
     }
 }
 
