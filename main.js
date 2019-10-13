@@ -10,6 +10,12 @@ const height = 400;
 let weightAmt = 4;
 let weightMultiplier = 0.5;
 let zoom = 120;
+
+let generateRivers = true;
+let riverAmt = 5;
+
+let mapContent = [];
+
 const mask = ctx.createImageData(width, height);
 
 function squareMask(x, y) {
@@ -29,43 +35,56 @@ const getColor = noise => {
     let r = 0.0;
     let g = 0.0;
     let b = 0.0;
+    let type = 'deep water';
 
-    if (noise < 0.3) {
+    if (noise < 0.25) {
         g = 100;
         b = 200;
+        type = 'deep water';
+    }
+    else if (noise >= 0.25 && noise < 0.3) {
+        g = 128;
+        b = 175;
+        type = 'shallow water';
     }
     else if (noise >= 0.3 && noise <= 0.35) {
         r = 250;
         g = 217;
         b = 127;
+        type = 'sand';
     }
     else if (noise >= 0.35 && noise <= 0.4) {
         r = 81;
         g = 255;
         b = 87;
+        type = 'light grass';
     }
     else if (noise > 0.4 && noise <= 0.6) {
         r = 62;
         g = 175;
         b = 30;
+        type = 'dark grass';
     }
     else if (noise > 0.6 && noise <= 0.8) {
         r = 90;
         g = 90;
         b = 90;
+        type = 'dark mountain';
     }
     else if (noise > 0.8 && noise <= 0.90) {
         r = 150;
         g = 150;
         b = 150;
+        type = 'light mountain';
     }
     else {
         r = 255;
         g = 255;
         b = 255;
+        type = 'snow';
     }
 
-    return { r, g, b };
+    return { r, g, b, type};
 }
 
 const refreshImage = () => {
@@ -89,7 +108,8 @@ const refreshImage = () => {
                 );
 
             let color = getColor(noise);
-
+            
+            mapContent[width * j + i] = {x: i, y: j, r: color.r, g: color.g, b: color.b, type: color.type};
 
             mask.data[pixelindex] = color.r;
             mask.data[pixelindex + 1] = color.g;
@@ -98,7 +118,17 @@ const refreshImage = () => {
         }
     }
 
+    if(generateRivers){riverGenerator();}
+
     ctx.putImageData(mask, 50, 50);
+}
+
+const riverGenerator = () => {
+    console.log("Generating Rivers");
+    let startPoints = mapContent.filter(p => p.type == "dark mountain");
+    for(let r = 0; r < riverAmt; r++){
+        
+    }
 }
 
 var zoomSlider = document.getElementById("zoomSlider");
